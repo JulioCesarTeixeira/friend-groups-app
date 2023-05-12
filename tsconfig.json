@@ -12,9 +12,7 @@
       "@screens/*": ["./src/screens/*"],
       "@services/*": ["./src/services/*"],
       "@utils/*": ["./src/utils/*"],
-      "@types/*": ["./src/types/*"],
       "@routes/*": ["./src/routes/*"],
-      "@theme/*": ["./src/theme/*"],
       "@storage/*": ["./src/storage/*"]
     }
   }
