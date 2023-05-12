@@ -20,6 +20,8 @@ export const Container = styled(TouchableOpacity)<Props>`
 
   justify-content: center;
   align-items: center;
+
+  margin-bottom: 16px;
 `;
 
 export const ButtonText = styled.Text`

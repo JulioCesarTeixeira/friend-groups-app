@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SafeAreaView, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 
 import { ThemeProvider } from "styled-components/native";
 import theme from "./src/theme";
@@ -30,7 +30,7 @@ export default function App() {
         translucent
         backgroundColor={"transparent"}
       />
-      {fontsLoaded ? <Players /> : <Loading />}
+      {fontsLoaded ? <Groups /> : <Loading />}
     </ThemeProvider>
   );
 }

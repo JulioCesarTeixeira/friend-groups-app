@@ -9,9 +9,9 @@ import { Button } from "@components/Button";
 
 export function Groups() {
   const [groups, setGroups] = useState([
-    // "Football",
-    // "Basketball",
-    // "Volleyball",
+    "Football",
+    "Basketball",
+    "Volleyball",
   ]);
 
   function handleGroupCardClick(groupName: string) {
@@ -38,6 +38,7 @@ export function Groups() {
         ListEmptyComponent={() => (
           <EmptyList title="Maybe you should register a new group?" />
         )}
+        showsVerticalScrollIndicator={false}
       />
 
       <Button
