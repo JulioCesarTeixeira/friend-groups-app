@@ -13,6 +13,7 @@ import {
 import { Groups } from "@screens/Groups";
 import { Loading } from "@components/Loading";
 import { NewGroup } from "@screens/NewGroup";
+import { Players } from "@screens/Players";
 
 export default function App() {
   // Load fonts from Google Fonts API and wait until they are loaded before rendering the app
@@ -29,7 +30,7 @@ export default function App() {
         translucent
         backgroundColor={"transparent"}
       />
-      {fontsLoaded ? <NewGroup /> : <Loading />}
+      {fontsLoaded ? <Players /> : <Loading />}
     </ThemeProvider>
   );
 }
