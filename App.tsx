@@ -1,5 +1,7 @@
 import React from "react";
-import { ActivityIndicator } from "react-native";
+
+import { SafeAreaView, StatusBar } from "react-native";
+
 import { ThemeProvider } from "styled-components/native";
 import theme from "./src/theme";
 import {
@@ -9,6 +11,7 @@ import {
 } from "@expo-google-fonts/roboto";
 
 import Groups from "@screens/Groups";
+import { Loading } from "@components/Loading";
 
 export default function App() {
   // Load fonts from Google Fonts API and wait until they are loaded before rendering the app
@@ -20,7 +23,12 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {fontsLoaded ? <Groups /> : <ActivityIndicator style={{ flex: 1 }} />}
+      <StatusBar
+        barStyle={"light-content"}
+        translucent
+        backgroundColor={"transparent"}
+      />
+      {fontsLoaded ? <Groups /> : <Loading />}
     </ThemeProvider>
   );
 }
