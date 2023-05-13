@@ -30,7 +30,6 @@ export function Groups() {
 
   return (
     <Container>
-      <SafeAreaView />
       <Header />
       <Highlight title="Groups" subtitle="Play with your group" />
 

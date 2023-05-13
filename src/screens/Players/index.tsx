@@ -28,7 +28,6 @@ export function Players() {
 
   return (
     <Container>
-      <SafeAreaView />
       <Header shouldShowBackButton />
 
       <Highlight

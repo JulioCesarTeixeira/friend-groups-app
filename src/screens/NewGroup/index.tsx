@@ -18,7 +18,6 @@ export function NewGroup() {
   }
   return (
     <Container>
-      <SafeAreaView />
       <Header shouldShowBackButton />
 
       <Content>
