@@ -11,9 +11,9 @@ export const AppRoutes: React.FC = () => {
   return (
     // Navigation context
     <Navigator screenOptions={{ headerShown: false }}>
-      <Screen name="groups" component={Groups} />
+      {/* <Screen name="groups" component={Groups} /> */}
 
-      <Screen name="new" component={NewGroup} />
+      {/* <Screen name="new" component={NewGroup} /> */}
 
       <Screen name="players" component={Players} />
     </Navigator>
