@@ -50,3 +50,7 @@ npm install
 # Start the application
 expo start
 ```
+
+## License
+
+This project is licensed under the terms of the MIT license. See [LICENSE](LICENSE.md) for more details.
