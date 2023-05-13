@@ -20,7 +20,7 @@ export function Groups() {
 
   function handleGroupCardClick(group: string) {
     console.log(`${group} clicked`);
-    navigation.navigate("players", { group });
+    navigation.navigate("players", { groupName: group });
   }
 
   function handleNewGroupButtonClick() {
