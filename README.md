@@ -11,6 +11,7 @@ Friend-Groups-App is a React Native application developed with Expo. This introd
 - [Tech Stack](#tech-stack)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
+- [License](#license)
 
 ## Features
 
