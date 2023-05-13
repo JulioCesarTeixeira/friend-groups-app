@@ -7,6 +7,8 @@ import { FlatList, SafeAreaView } from "react-native";
 import { EmptyList } from "@components/EmptyList";
 import { Button } from "@components/Button";
 
+import { useNavigation } from "@react-navigation/native";
+
 export function Groups() {
   const [groups, setGroups] = useState([
     "Football",
@@ -14,12 +16,16 @@ export function Groups() {
     "Volleyball",
   ]);
 
-  function handleGroupCardClick(groupName: string) {
-    console.log(`${groupName} clicked`);
+  const navigation = useNavigation();
+
+  function handleGroupCardClick(group: string) {
+    console.log(`${group} clicked`);
+    navigation.navigate("players", { group });
   }
 
   function handleNewGroupButtonClick() {
     console.log("New group button clicked");
+    navigation.navigate("new");
   }
 
   return (

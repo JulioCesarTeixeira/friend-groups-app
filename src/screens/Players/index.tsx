@@ -29,7 +29,7 @@ export function Players() {
   return (
     <Container>
       <SafeAreaView />
-      <Header showBackButton />
+      <Header shouldShowBackButton />
 
       <Highlight
         title="Group name"
