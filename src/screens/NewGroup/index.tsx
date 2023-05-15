@@ -6,6 +6,7 @@ import { Button } from "@components/Button";
 import { TextInput } from "@components/FormComponents/TextInput";
 import { useNavigation } from "@react-navigation/native";
 import { groupCreate } from "@storage/group/groupCreate";
+import { Alert } from "react-native";
 
 export function NewGroup() {
   const [groupName, setGroupName] = useState("");
@@ -14,9 +15,18 @@ export function NewGroup() {
   async function handleNewGroup() {
     console.log(`New group ${groupName} created`);
 
-    await groupCreate(groupName);
-
+    try {
+      await groupCreate(groupName);
+    } catch (error: any) {
+      return Alert.alert("Error", error.message, [
+        { text: "OK", onPress: handleResetForm },
+      ]);
+    }
     navigate("players", { groupName });
+  }
+
+  function handleResetForm() {
+    setGroupName("");
   }
   return (
     <Container>

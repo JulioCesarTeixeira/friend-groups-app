@@ -7,10 +7,11 @@ import { FlatList } from "react-native";
 import { EmptyList } from "@components/EmptyList";
 import { Button } from "@components/Button";
 
-import { useNavigation } from "@react-navigation/native";
-import { getGroups } from "@storage/group/getGroups";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { groupsGetAll } from "@storage/group/groupsGetAll";
 
 export function Groups() {
+  const isFocused = useIsFocused();
   const [groups, setGroups] = useState([]);
 
   const navigation = useNavigation();
@@ -28,11 +29,11 @@ export function Groups() {
   useEffect(() => {
     console.log("Groups screen loaded");
 
-    getGroups().then((groups) => {
+    groupsGetAll().then((groups) => {
       console.log(`Groups: ${groups}`);
       setGroups(groups);
     });
-  }, []);
+  }, [isFocused]);
 
   return (
     <Container>
