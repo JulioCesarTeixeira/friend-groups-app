@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "./styles";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { GroupCard } from "@components/GroupCard";
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList } from "react-native";
 import { EmptyList } from "@components/EmptyList";
 import { Button } from "@components/Button";
 
 import { useNavigation } from "@react-navigation/native";
+import { getGroups } from "@storage/group/getGroups";
 
 export function Groups() {
-  const [groups, setGroups] = useState([
-    "Football",
-    "Basketball",
-    "Volleyball",
-  ]);
+  const [groups, setGroups] = useState([]);
 
   const navigation = useNavigation();
 
@@ -27,6 +24,15 @@ export function Groups() {
     console.log("New group button clicked");
     navigation.navigate("new");
   }
+
+  useEffect(() => {
+    console.log("Groups screen loaded");
+
+    getGroups().then((groups) => {
+      console.log(`Groups: ${groups}`);
+      setGroups(groups);
+    });
+  }, []);
 
   return (
     <Container>
