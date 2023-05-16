@@ -17,12 +17,13 @@ export function NewGroup() {
 
     try {
       await groupCreate(groupName);
+
+      navigate("players", { groupName });
     } catch (error: any) {
-      return Alert.alert("Error", error.message, [
+      return Alert.alert("Oops", error.message, [
         { text: "OK", onPress: handleResetForm },
       ]);
     }
-    navigate("players", { groupName });
   }
 
   function handleResetForm() {

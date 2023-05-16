@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
+import { FlatList } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Container } from "./styles";
+
+import { Button } from "@components/Button";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { GroupCard } from "@components/GroupCard";
-import { FlatList } from "react-native";
 import { EmptyList } from "@components/EmptyList";
-import { Button } from "@components/Button";
 
-import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { groupsGetAll } from "@storage/group/groupsGetAll";
 
 export function Groups() {
-  const isFocused = useIsFocused();
-  const [groups, setGroups] = useState([]);
-
   const navigation = useNavigation();
+
+  const [groups, setGroups] = useState([]);
 
   function handleGroupCardClick(group: string) {
     console.log(`${group} clicked`);
@@ -26,14 +26,20 @@ export function Groups() {
     navigation.navigate("new");
   }
 
-  useEffect(() => {
-    console.log("Groups screen loaded");
-
-    groupsGetAll().then((groups) => {
-      console.log(`Groups: ${groups}`);
+  async function handleRefreshGroups() {
+    try {
+      const groups = await groupsGetAll();
       setGroups(groups);
-    });
-  }, [isFocused]);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      handleRefreshGroups();
+    }, [])
+  );
 
   return (
     <Container>
