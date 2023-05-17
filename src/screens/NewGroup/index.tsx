@@ -6,23 +6,41 @@ import { Button } from "@components/Button";
 import { TextInput } from "@components/FormComponents/TextInput";
 import { useNavigation } from "@react-navigation/native";
 import { groupCreate } from "@storage/group/groupCreate";
-import { Alert } from "react-native";
+import { AppError } from "@utils/AppError";
+import { useAlert } from "@hooks/useAlert";
 
 export function NewGroup() {
   const [groupName, setGroupName] = useState("");
   const { navigate } = useNavigation();
+  const { showAlert } = useAlert();
 
   async function handleNewGroup() {
     console.log(`New group ${groupName} created`);
 
     try {
+      if (!groupName.trim()) {
+        return showAlert({
+          title: "New group",
+          message: "Group name is required",
+          buttons: [{ text: "OK", onPress: handleResetForm }],
+        });
+      }
+
       await groupCreate(groupName);
 
       navigate("players", { groupName });
-    } catch (error: any) {
-      return Alert.alert("Oops", error.message, [
-        { text: "OK", onPress: handleResetForm },
-      ]);
+    } catch (error) {
+      if (error instanceof AppError) {
+        return showAlert({
+          message: error.message,
+          buttons: [{ text: "OK", onPress: handleResetForm }],
+        });
+      } else {
+        return showAlert({
+          message: "It was not possible to create a new group.",
+          buttons: [{ text: "OK", onPress: handleResetForm }],
+        });
+      }
     }
   }
 
