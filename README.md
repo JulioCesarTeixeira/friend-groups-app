@@ -2,6 +2,8 @@
 
 ![GitHub top language](https://img.shields.io/github/languages/top/JulioCesarTeixeira/friend-groups-app?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/JulioCesarTeixeira/friend-groups-app?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/JulioCesarTeixeira/friend-groups-app?style=flat-square)
+![GitHub](https://img.shields.io/github/license/JulioCesarTeixeira/friend-groups-app?style=flat-square)
 
 Friend-Groups-App is a React Native application developed with Expo. This introductory application showcases several modern development concepts and practices.
 
@@ -13,7 +15,8 @@ Friend-Groups-App is a React Native application developed with Expo. This introd
 - [Installation](#installation)
 <!--
 - [License](#license)
--->
+  -->
+
 ## Features
 
 - Create and manage groups.
