@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import React, { useRef, useState, useEffect } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { FlatList } from "react-native";
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
 import { Header } from "@components/Header";
@@ -13,21 +13,23 @@ import { Button } from "@components/Button";
 import { AppError } from "@utils/AppError";
 import { useAlert } from "@hooks/useAlert";
 import { playerAddByGroup } from "@storage/player/playerAddByGroup";
-import { playersGetByGroup } from "@storage/player/playersGetByGroup";
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
 import { playerDelete } from "@storage/player/playerDelete";
+import { groupDelete } from "@storage/group/groupDelete";
+import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam";
 
 type RouteParams = {
   groupName: string;
 };
 
 export function Players() {
-  const teams = ["Team A", "Team B"];
   const { showAlert } = useAlert();
+  const { navigate } = useNavigation();
+
+  const teams = ["Team A", "Team B"];
   const [team, setTeam] = useState<string>(teams[0]);
 
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
-
   const [playerName, setPlayerName] = useState<string>("");
 
   const { params } = useRoute();
@@ -36,10 +38,17 @@ export function Players() {
   async function handleAddPlayer() {
     console.log(`Player ${playerName} added`);
 
-    try {
-      if (playerName === "") return;
+    if (playerName.trim() === "") return;
 
-      await playerAddByGroup({ name: playerName, team }, groupName);
+    const newPlayer: PlayerStorageDTO = {
+      name: playerName,
+      team,
+    };
+
+    try {
+      await playerAddByGroup(newPlayer, groupName);
+
+      await fetchPlayersByTeam();
 
       setPlayerName("");
     } catch (error: any) {
@@ -60,6 +69,8 @@ export function Players() {
   async function handleRemovePlayer(playerName: string) {
     try {
       await playerDelete(playerName, groupName);
+
+      await fetchPlayersByTeam();
     } catch (error: any) {
       if (error instanceof AppError) {
         return showAlert({
@@ -76,20 +87,41 @@ export function Players() {
     console.log(`Player ${playerName} removed`);
   }
 
-  async function handleFetchPlayers() {
+  async function handleRemoveTeam() {
     try {
-      const players = await playersGetByGroup(groupName);
+      // Remove the team
+      await groupDelete(groupName);
+      console.log(`Team ${team} removed`);
+
+      // Go back to the home screen
+      navigate("groups");
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return showAlert({
+          title: "Error",
+          message: error.message,
+        });
+      }
+
+      return showAlert({
+        title: "Error",
+        message: "An unexpected error has occurred",
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchPlayersByTeam();
+  }, [team]);
+
+  async function fetchPlayersByTeam() {
+    try {
+      const players = await playersGetByGroupAndTeam(groupName, team);
       setPlayers(players);
     } catch (error: any) {
       console.log(error.message);
     }
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      handleFetchPlayers();
-    }, [handleRemovePlayer, handleAddPlayer])
-  );
 
   return (
     <Container>
@@ -147,7 +179,7 @@ export function Players() {
         ]}
       />
 
-      <Button title="Remove team" type="SECONDARY" />
+      <Button title="Remove team" type="SECONDARY" onPress={handleRemoveTeam} />
     </Container>
   );
 }
