@@ -16,14 +16,14 @@ export function Groups() {
 
   const [groups, setGroups] = useState([]);
 
-  function handleGroupCardClick(group: string) {
-    console.log(`${group} clicked`);
-    navigation.navigate("players", { groupName: group });
-  }
-
   function handleNewGroupButtonClick() {
     console.log("New group button clicked");
     navigation.navigate("new");
+  }
+
+  function handleOpenGroup(group: string) {
+    console.log(`${group} clicked`);
+    navigation.navigate("players", { groupName: group });
   }
 
   async function handleRefreshGroups() {
@@ -50,7 +50,7 @@ export function Groups() {
         data={groups}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
-          <GroupCard title={item} onPress={() => handleGroupCardClick(item)} />
+          <GroupCard title={item} onPress={() => handleOpenGroup(item)} />
         )}
         contentContainerStyle={groups.length === 0 && { flex: 1 }}
         ListEmptyComponent={() => (
