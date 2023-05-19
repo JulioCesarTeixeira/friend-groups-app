@@ -20,12 +20,14 @@ import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
 import { playerDeleteByGroup } from "@storage/player/playerDeleteByGroup";
 import { groupDeleteByName } from "@storage/group/groupDeleteByName";
 import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam";
+import { Loading } from "@components/Loading";
 
 type RouteParams = {
   groupName: string;
 };
 
 export function Players() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { showAlert } = useAlert();
   const { navigate } = useNavigation();
 
@@ -133,10 +135,16 @@ export function Players() {
 
   async function fetchPlayersByTeam() {
     try {
+      setIsLoading(true);
+
       const players = await playersGetByGroupAndTeam(groupName, team);
       setPlayers(players);
+
+      console.log(`Players fetched from ${team}`);
     } catch (error: any) {
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -184,27 +192,31 @@ export function Players() {
         <NumberOfPlayers>{players.length}</NumberOfPlayers>
       </HeaderList>
 
-      <FlatList
-        data={players}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <PlayerCard
-            name={item.name}
-            onRemove={() => handlePlayerDelete(item.name)}
-          />
-        )}
-        ListEmptyComponent={() => (
-          <EmptyList title="Maybe you should add some players?" />
-        )}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          { paddingBottom: 100 },
-          players.length === 0 && { flex: 1 },
-        ]}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={players}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <PlayerCard
+              name={item.name}
+              onRemove={() => handlePlayerDelete(item.name)}
+            />
+          )}
+          ListEmptyComponent={() => (
+            <EmptyList title="Maybe you should add some players?" />
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            { paddingBottom: 100 },
+            players.length === 0 && { flex: 1 },
+          ]}
+        />
+      )}
 
       <Button
-        title="Remove team"
+        title="Remove Group"
         type="SECONDARY"
         onPress={handleGroupDelete}
       />

@@ -65,9 +65,10 @@ export function NewGroup() {
         />
 
         <Button
-          title="Create"
+          title="Confirm"
           style={{ marginTop: 20 }}
           onPress={handleNewGroup}
+          disabled={!groupName.trim()}
         />
       </Content>
     </Container>
