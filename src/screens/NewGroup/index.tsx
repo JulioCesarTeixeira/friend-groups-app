@@ -3,7 +3,7 @@ import { Container, Content, Icon } from "./styles";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { Button } from "@components/Button";
-import { TextInput } from "@components/FormComponents/TextInput";
+import { Input } from "@components/FormComponents/Input";
 import { useNavigation } from "@react-navigation/native";
 import { groupCreate } from "@storage/group/groupCreate";
 import { AppError } from "@utils/AppError";
@@ -57,7 +57,7 @@ export function NewGroup() {
           title="New group"
           subtitle="Create a new group to add new people"
         />
-        <TextInput
+        <Input
           placeholder="Group name"
           value={groupName}
           onChangeText={setGroupName}

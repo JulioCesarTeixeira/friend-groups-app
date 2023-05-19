@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { FlatList } from "react-native";
+import { FlatList, TextInput } from "react-native";
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
-import { TextInput } from "@components/FormComponents/TextInput";
+import { Input } from "@components/FormComponents/Input";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { Filter } from "@components/Filter";
 import { PlayerCard } from "@components/PlayerCard";
@@ -14,7 +14,7 @@ import { AppError } from "@utils/AppError";
 import { useAlert } from "@hooks/useAlert";
 import { playerAddByGroup } from "@storage/player/playerAddByGroup";
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
-import { playerDelete } from "@storage/player/playerDelete";
+import { playerDeleteByGroup } from "@storage/player/playerDeleteByGroup";
 import { groupDelete } from "@storage/group/groupDelete";
 import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam";
 
@@ -28,6 +28,7 @@ export function Players() {
 
   const teams = ["Team A", "Team B"];
   const [team, setTeam] = useState<string>(teams[0]);
+  const inputRef = useRef<TextInput>(null);
 
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
   const [playerName, setPlayerName] = useState<string>("");
@@ -48,8 +49,9 @@ export function Players() {
     try {
       await playerAddByGroup(newPlayer, groupName);
 
-      await fetchPlayersByTeam();
+      inputRef.current?.blur();
 
+      fetchPlayersByTeam();
       setPlayerName("");
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -68,7 +70,7 @@ export function Players() {
 
   async function handleRemovePlayer(playerName: string) {
     try {
-      await playerDelete(playerName, groupName);
+      await playerDeleteByGroup(playerName, groupName);
 
       await fetchPlayersByTeam();
     } catch (error: any) {
@@ -133,11 +135,14 @@ export function Players() {
       />
 
       <Form>
-        <TextInput
+        <Input
+          inputRef={inputRef}
           placeholder="Player name"
           autoCorrect={false}
           value={playerName}
           onChangeText={setPlayerName}
+          onSubmitEditing={handleAddPlayer}
+          returnKeyType="done"
         />
 
         <ButtonIcon type={"PRIMARY"} icon="add" onPress={handleAddPlayer} />
