@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FlatList, TextInput } from "react-native";
+
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
+
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { Input } from "@components/FormComponents/Input";
@@ -12,10 +14,11 @@ import { EmptyList } from "@components/EmptyList";
 import { Button } from "@components/Button";
 import { AppError } from "@utils/AppError";
 import { useAlert } from "@hooks/useAlert";
+
 import { playerAddByGroup } from "@storage/player/playerAddByGroup";
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
 import { playerDeleteByGroup } from "@storage/player/playerDeleteByGroup";
-import { groupDelete } from "@storage/group/groupDelete";
+import { groupDeleteByName } from "@storage/group/groupDeleteByName";
 import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam";
 
 type RouteParams = {
@@ -36,7 +39,7 @@ export function Players() {
   const { params } = useRoute();
   const { groupName } = params as RouteParams;
 
-  async function handleAddPlayer() {
+  async function handlePlayerAdd() {
     console.log(`Player ${playerName} added`);
 
     if (playerName.trim() === "") return;
@@ -68,7 +71,7 @@ export function Players() {
     }
   }
 
-  async function handleRemovePlayer(playerName: string) {
+  async function handlePlayerDelete(playerName: string) {
     try {
       await playerDeleteByGroup(playerName, groupName);
 
@@ -83,16 +86,15 @@ export function Players() {
 
       return showAlert({
         title: "Error",
-        message: "An unexpected error has occurred",
+        message: "It was not possible to remove chosen player",
       });
     }
     console.log(`Player ${playerName} removed`);
   }
 
-  async function handleRemoveTeam() {
+  async function groupDeleteAndRedirectToHome() {
     try {
-      // Remove the team
-      await groupDelete(groupName);
+      await groupDeleteByName(groupName);
       console.log(`Team ${team} removed`);
 
       // Go back to the home screen
@@ -112,9 +114,22 @@ export function Players() {
     }
   }
 
-  useEffect(() => {
-    fetchPlayersByTeam();
-  }, [team]);
+  async function handleGroupDelete() {
+    // Remove the team
+    showAlert({
+      title: "Are you sure?",
+      message: "This action cannot be undone",
+      buttons: [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Remove",
+          onPress: () => groupDeleteAndRedirectToHome(),
+        },
+      ],
+    });
+  }
 
   async function fetchPlayersByTeam() {
     try {
@@ -124,6 +139,10 @@ export function Players() {
       console.log(error.message);
     }
   }
+
+  useEffect(() => {
+    fetchPlayersByTeam();
+  }, [team]);
 
   return (
     <Container>
@@ -141,11 +160,11 @@ export function Players() {
           autoCorrect={false}
           value={playerName}
           onChangeText={setPlayerName}
-          onSubmitEditing={handleAddPlayer}
+          onSubmitEditing={handlePlayerAdd}
           returnKeyType="done"
         />
 
-        <ButtonIcon type={"PRIMARY"} icon="add" onPress={handleAddPlayer} />
+        <ButtonIcon type={"PRIMARY"} icon="add" onPress={handlePlayerAdd} />
       </Form>
 
       <HeaderList>
@@ -171,7 +190,7 @@ export function Players() {
         renderItem={({ item }) => (
           <PlayerCard
             name={item.name}
-            onRemove={() => handleRemovePlayer(item.name)}
+            onRemove={() => handlePlayerDelete(item.name)}
           />
         )}
         ListEmptyComponent={() => (
@@ -184,7 +203,11 @@ export function Players() {
         ]}
       />
 
-      <Button title="Remove team" type="SECONDARY" onPress={handleRemoveTeam} />
+      <Button
+        title="Remove team"
+        type="SECONDARY"
+        onPress={handleGroupDelete}
+      />
     </Container>
   );
 }
